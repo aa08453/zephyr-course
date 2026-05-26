@@ -1,8 +1,7 @@
-# Zephyr Training Environment
+## Zephyr Course 2026 by iomico
 
-Welcome to the Zephyr RTOS training! This repository includes a ready-to-use
-development environment based on Zephyr 4.3.0, which you can set up in one of
-three ways:
+This repository is for the homeworks assigned in the Zephyr RTOS training course by iomico. It includes a ready-to-use
+development environment based on Zephyr 4.3.0, which can be set up as follows:
 
 ---
 
@@ -13,3 +12,4 @@ Follow the following guide:
 
 Make sure to select appropriate OS and to perform all steps till
 [Build the Blinky Sample](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#build-the-blinky-sample).
+
