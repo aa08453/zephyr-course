@@ -1,66 +1,7 @@
-menuconfig LED_SUBSYSTEM
-    bool "LED Subsystem"
-    default y
-
-if LED_SUBSYSTEM
-
-config BLINK_TIME_MS
-    int 
-    default 250 if BLINK_250MS
-    default 500 if BLINK_500MS
-    default 1000 if BLINK_1000MS
-    default 2000 if BLINK_2000MS
-    default 0
-    help
-        Time between LED toggles in milliseconds.
-
-choice 
-    prompt "LED Blink speed"
-    default BLINK_1000MS
-
-config BLINK_250MS
-    bool "Fast (250ms)"
-
-config BLINK_500MS
-    bool "Medium (500ms)"    
-
-config BLINK_1000MS
-    bool "Normal (1s)"
-
-config BLINK_2000MS
-    bool "Slow (2s)"
-endchoice
-
-menuconfig ADVANCED
-    bool "Advanced LED Settings"
-    default n
-
-if ADVANCED
-
-config LED_BRIGHTNESS
-    int "LED Brightness (0 - 100)"
-    range 0 100
-    default 100
-
-config LED_FADE_DURATION_MS
-    int "Fade duration (ms)"
-    range 0 5000
+menuconfig APP_HEARTBEAT_PERIOD_MS
+    int "Heartbeat LED"
+    range 100 2000
     default 500
-
-menu "Expert Settings"
-    visible if ADVANCED
-
-config LED_DEBUG
-    bool "Enable LED Debugging"
-
-config CUSTOM_BLINK
-    bool "Custom Blink Pattern"
-
-endmenu
-
-endif
-
-endif
 
 
 source "Kconfig.zephyr"

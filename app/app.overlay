@@ -1,0 +1,7 @@
+/{
+    aliases 
+    { 
+        app-led = &green_led_1; // using stm32f746g_disco board
+    };
+
+};

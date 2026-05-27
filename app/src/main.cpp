@@ -9,16 +9,16 @@
 #include <zephyr/drivers/gpio.h>
 
 /* 1000 msec = 1 sec */
-int delay = CONFIG_BLINK_TIME_MS;
+int delay = CONFIG_APP_HEARTBEAT_PERIOD_MS;
 
 /* The devicetree node identifier for the "led0" alias. */
-#define LED0_NODE DT_ALIAS(led0)
+#define APP_LED DT_ALIAS(app_led)
 
 /*
  * A build error on this line means your board is unsupported.
  * See the sample documentation for information on how to fix this.
  */
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(APP_LED, gpios);
 
 int main(void)
 {
