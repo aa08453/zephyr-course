@@ -1,0 +1,9 @@
+description: Our Sensor Driver
+compatible: "our,driver"
+include: base.yaml
+properties:
+  led-gpios:
+    type: phandle-array
+    required: true
+    description: |
+      GPIO for the driver LED.

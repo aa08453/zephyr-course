@@ -1,7 +1,15 @@
 /{
+
     aliases 
     { 
         app-led = &green_led_1; // using stm32f746g_disco board
+    };
+
+    our_driver0: our_driver 
+    {
+        compatible = "our,driver";
+        status = "okay"; // using stm32f746g_disco board
+        led-gpios = <&gpioi 1 GPIO_ACTIVE_HIGH>;    
     };
 
 };
