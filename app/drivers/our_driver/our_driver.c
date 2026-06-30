@@ -1,27 +1,19 @@
-#include <zephyr/drivers/sensor.h>
-#include <zephyr/drivers/gpio.h>
 #include <zephyr/logging/log.h>
-
-#define DT_DRV_COMPAT our_driver
-#define DRIVER_LED_ALIAS DT_ALIAS(app_led)
+#include <our_driver/our_driver.h>
 
 LOG_MODULE_REGISTER(our_driver, LOG_LEVEL_INF);
 
-struct our_driver_config {
-    struct gpio_dt_spec led_gpio;
-};
 
 static const struct our_driver_config my_config = {
     .led_gpio = GPIO_DT_SPEC_INST_GET(0, led_gpios),
 };
 
-struct our_driver_data {
-    bool data;
-};
 
 static struct our_driver_data my_data = {
-    .data = true,
+    .state = true,
+    .counter = 0,
 };
+
 
 static int channel_get_my_impl(
     const struct device *dev,
@@ -29,29 +21,36 @@ static int channel_get_my_impl(
     struct sensor_value *val)
 {
     const struct our_driver_config *cfg = dev->config;
-    struct our_driver_data *state = dev->data;
+    struct our_driver_data *driver_data = dev->data;
 
     int ret = gpio_pin_set_dt(&cfg->led_gpio, 0);
     if (ret < 0) {
         return 0;
     }
-    state->data = !state->data;
-    LOG_INF("LED state: %s\n", state->data ? "ON" : "OFF");
+    driver_data->state = !driver_data->state;
+    LOG_INF("LED state: %s\n", driver_data->state ? "ON" : "OFF");
     return 0;
+}
+
+static inline void calibrate_my_impl(const struct device *dev)
+{
+    struct our_driver_data *driver_data = dev->data;
+    driver_data->counter += 1;
+    printf("Counter now %d\n", driver_data->counter);
 }
 
 
 static int sample_fetch_my_impl(const struct device *dev, enum sensor_channel chan)
 {
     const struct our_driver_config *cfg = dev->config;
-    struct our_driver_data *val = dev->data;
+    struct our_driver_data *driver_data = dev->data;
 
     int ret = gpio_pin_set_dt(&cfg->led_gpio, 1);
     if (ret < 0) {
         return 0;
     }
-    val->data = !val->data;
-    LOG_INF("LED state: %s\n", val->data ? "ON" : "OFF");
+    driver_data->state = !driver_data->state;
+    LOG_INF("LED state: %s\n", driver_data->state ? "ON" : "OFF");
     return 0;
 }
 
@@ -72,10 +71,28 @@ static int init(const struct device *dev)
 }
 
 
-static DEVICE_API(sensor, my_api) = {
-    .channel_get = channel_get_my_impl,
-    .sample_fetch = sample_fetch_my_impl,
+// static DEVICE_API(sensor, my_api) = {
+//     .channel_get = channel_get_my_impl,
+//     .sample_fetch = sample_fetch_my_impl,
+// };
+
+static const struct our_driver_api my_api = {
+    .sensor_api = {
+        .channel_get = channel_get_my_impl,
+        .sample_fetch = sample_fetch_my_impl,
+    },
+    .calibrate = calibrate_my_impl,
 };
 
+void our_driver_calibrate(const struct device *dev)
+{
+    if (dev != NULL) {
+        const struct our_driver_api *api = dev->api;
+
+        if (api != NULL && api->calibrate != NULL) {
+            api->calibrate(dev);
+        }
+    }
+}
 
 DEVICE_DT_INST_DEFINE(0, init, NULL, &my_data, &my_config, POST_KERNEL, 80, &my_api);

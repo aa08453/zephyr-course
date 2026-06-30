@@ -9,6 +9,7 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/drivers/sensor.h>
+#include <our_driver/our_driver.h>
 
 /* 1000 msec = 1 sec */
 int delay = CONFIG_APP_HEARTBEAT_PERIOD_MS;
@@ -25,15 +26,15 @@ static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(APP_LED, gpios);
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
-namespace{
-	void test()
-	{
-		struct sensor_value val;
-		int ret = sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
-		ret = sensor_sample_fetch(driver);
-		// LOG_INF("Channel ret %d", ret);   
-	}
+void test()
+{
+	struct sensor_value val;
+	int ret = sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
+	ret = sensor_sample_fetch(driver);
+	our_driver_calibrate(driver);
+	// LOG_INF("Channel ret %d", ret);   
 }
+
 
 int main(void)
 {
