@@ -28,7 +28,7 @@ static int channel_get_my_impl(
         return 0;
     }
     driver_data->state = !driver_data->state;
-    LOG_INF("LED state: %s\n", driver_data->state ? "ON" : "OFF");
+    LOG_INF("LED state: %s", driver_data->state ? "ON" : "OFF");
     return 0;
 }
 
@@ -36,7 +36,7 @@ static inline void calibrate_my_impl(const struct device *dev)
 {
     struct our_driver_data *driver_data = dev->data;
     driver_data->counter += 1;
-    printf("Counter now %d\n", driver_data->counter);
+    LOG_INF("Counter now %d", driver_data->counter);
 }
 
 
@@ -50,7 +50,7 @@ static int sample_fetch_my_impl(const struct device *dev, enum sensor_channel ch
         return 0;
     }
     driver_data->state = !driver_data->state;
-    LOG_INF("LED state: %s\n", driver_data->state ? "ON" : "OFF");
+    LOG_INF("LED state: %s", driver_data->state ? "ON" : "OFF");
     return 0;
 }
 
